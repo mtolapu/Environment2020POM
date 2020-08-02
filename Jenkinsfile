@@ -5,13 +5,13 @@ pipeline {
       parallel {
         stage('Build QA') {
           steps {
-            sh 'echo"PrintQA"'
+            echo 'Build on  QA'
           }
         }
 
         stage('chrome') {
           steps {
-            sh 'echo "run on chrome"'
+            echo 'Chome'
           }
         }
 
@@ -22,19 +22,19 @@ pipeline {
       parallel {
         stage('Build on Stage') {
           steps {
-            sh 'echo "run on stage"'
+            echo 'Stage'
           }
         }
 
         stage('FireFox') {
           steps {
-            sh 'echo "run on FF"'
+            echo 'FireFox'
           }
         }
 
         stage('chrome') {
           steps {
-            sh 'echo "run on chrome"'
+            echo 'Chrome'
           }
         }
 
