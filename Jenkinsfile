@@ -1,45 +1,94 @@
 pipeline {
   agent any
   stages {
+    stage('Build Dev') {
+      parallel {
+        stage('Build Dev') {
+          steps {
+            sh 'mvn clean install -DskipTests=true'
+          }
+        }
+
+        stage('chrome') {
+          steps {
+            sh 'mvn test -Denv=qa -Dbrowser=chrome'
+          }
+        }
+
+      }
+    }
+
     stage('Build QA') {
       parallel {
         stage('Build QA') {
           steps {
-            echo 'Build on  QA'
+            sh 'mvn clean install -DskipTests=true'
           }
         }
 
         stage('chrome') {
           steps {
-            echo 'Chome'
+            sh 'mvn test -Denv=qa -Dbrowser=chrome'
+          }
+        }
+
+        stage('firefox') {
+          steps {
+            sh 'mvn test -Denv=qa -Dbrowser=firefox'
           }
         }
 
       }
     }
 
-    stage('Build on Stage') {
+    stage('Build Stage') {
       parallel {
-        stage('Build on Stage') {
+        stage('Build Stage') {
           steps {
-            echo 'Stage'
+            sh 'mvn clean install -DskipTests=true'
           }
         }
 
-        stage('FireFox') {
+        stage('firefox') {
           steps {
-            echo 'FireFox'
+            sh 'mvn test -Denv=qa -Dbrowser=firefox'
           }
         }
 
         stage('chrome') {
           steps {
-            echo 'Chrome'
+            sh 'mvn test -Denv=qa -Dbrowser=chrome'
+          }
+        }
+
+        stage('safari') {
+          steps {
+            sh 'mvn test -Denv=qa -Dbrowser=safari'
           }
         }
 
       }
     }
 
+    
+    stage('Publish reports') {
+           steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: '/allure-results']]
+                    ])
+                }
+            }
+        }
+    
+    
+
+  }
+  tools {
+    maven 'M3'
   }
 }
