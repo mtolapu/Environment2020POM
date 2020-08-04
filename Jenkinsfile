@@ -1,69 +1,34 @@
 pipeline {
   agent any
   stages {
-    stage('Build Dev') {
+    stage('Run On Dev') {
       parallel {
-        stage('Build Dev') {
+        stage('Run On Dev') {
           steps {
             bat 'mvn clean install -DskipTests=true'
           }
         }
 
-        stage('chrome') {
+        stage('run test on dev') {
           steps {
-            bat 'mvn test -Denv=qa -Dbrowser=chrome'
+            bat 'mvn test -Denv=dev'
           }
         }
 
       }
     }
 
-    stage('Build QA') {
+    stage('Run On QA') {
       parallel {
-        stage('Build QA') {
+        stage('Run On QA') {
           steps {
-            sh 'mvn clean install -DskipTests=true'
+            bat 'mvn clean install -DskipTests=true'
           }
         }
 
-        stage('chrome') {
+        stage('run test on qa') {
           steps {
-            sh 'mvn test -Denv=qa -Dbrowser=chrome'
-          }
-        }
-
-        stage('firefox') {
-          steps {
-            sh 'mvn test -Denv=qa -Dbrowser=firefox'
-          }
-        }
-
-      }
-    }
-
-    stage('Build Stage') {
-      parallel {
-        stage('Build Stage') {
-          steps {
-            sh 'mvn clean install -DskipTests=true'
-          }
-        }
-
-        stage('firefox') {
-          steps {
-            sh 'mvn test -Denv=qa -Dbrowser=firefox'
-          }
-        }
-
-        stage('chrome') {
-          steps {
-            sh 'mvn test -Denv=qa -Dbrowser=chrome'
-          }
-        }
-
-        stage('safari') {
-          steps {
-            sh 'mvn test -Denv=qa -Dbrowser=safari'
+            bat 'mvn test -Denv=qa'
           }
         }
 
@@ -74,7 +39,7 @@ pipeline {
       steps {
         script {
           allure([
-            includeProperties: false,
+            includeProperties:false,
             jdk: '',
             properties: [],
             reportBuildPolicy: 'ALWAYS',
